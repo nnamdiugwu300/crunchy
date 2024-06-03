@@ -1,0 +1,20 @@
+Important COnfigs for Crunchy
+-- How to take one off Backoffs;
+add the code below to your postgres.yaml
+spec:
+  backups:
+    pgbackrest:
+      manual:
+        repoName: repo1
+        options:
+         - --type=full
+----
+After that, you will be able to take a one off backup with the command below;
+kubectl annotate -n postgres-operator postgrescluster hippo \
+  postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
+
+The command above can be used to take the backup for the first time,
+subsequently, use the command below to take back up snapshots;
+
+kubectl annotate -n postgres-operator postgrescluster hippo --overwrite \
+  postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
